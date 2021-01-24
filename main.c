@@ -10,7 +10,7 @@
 #include <time.h>
 #include <stdbool.h>
 
-#include "bitmap.c"
+#include "bitmap.h"
 
 #define MIN_OFFSET 70
 #define MAX_OFFSET 200

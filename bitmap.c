@@ -1,51 +1,9 @@
 
-#ifndef _BITMAP_C_
-#define _BITMAP_C_
-
 #include <stdlib.h>
 #include <stdio.h>
+#include "bitmap.h"
 
-
-typedef struct { // total size = 14B
-	short type; // 2B
-	int size;   // 4B
-	short reserved1; // 2B
-	short reserved2; // 2B
-	int offset; // 4B	
-} bmp_header_t;
-
-typedef struct { // total size = 40B
-  int size;
-  int width;
-  int height;
-  short planes; // 2B
-  short bit_count; // 2B
-  int compression;
-  int size_image;
-  int x_pels_per_meter;
-  int y_pels_per_meter;
-  int clr_used;
-  int clr_important;
-} bmp_infoheader_t;
-
-typedef struct {
-	char a;
-	char r;
-	char g;
-	char b;
-} color_t;
-
-typedef struct {
-	color_t *colors;
-} bmp_pixelarray_t;
-
-typedef struct {
-	bmp_header_t header;
-	bmp_infoheader_t infoheader;
-	bmp_pixelarray_t pixelarray;
-} bitmap_t;
-
-bmp_header_t get_default_header(int width, int height) {
+static bmp_header_t get_default_header(int width, int height) {
 	bmp_header_t header;
 	header.type = 0x4D42;
 	header.size = 14 + 40 + 4 * (width * height);
@@ -55,7 +13,7 @@ bmp_header_t get_default_header(int width, int height) {
 	return header;	
 }
 
-bmp_infoheader_t get_default_infoheader(int width, int height) {
+static bmp_infoheader_t get_default_infoheader(int width, int height) {
 	bmp_infoheader_t ih;
 	ih.size = 40;
 	ih.width = width;
@@ -71,7 +29,7 @@ bmp_infoheader_t get_default_infoheader(int width, int height) {
 	return ih;
 }
 
-bmp_pixelarray_t get_new_pixelarray(int width, int height) {
+static bmp_pixelarray_t get_new_pixelarray(int width, int height) {
 	bmp_pixelarray_t pa;
 	pa.colors = calloc(width * height, sizeof(color_t));
 	return pa;
@@ -150,4 +108,3 @@ int save_bmp_to_file(bitmap_t *bmp, char *filename) {
 	return 0;
 }
 
-#endif
